@@ -1,0 +1,12 @@
+#fb_logout, #g_signout {
+	display: none;
+}
+.info-wrap {
+	display: none;
+	margin-left: 10%;
+}
+.card-wrapper> center >.login-opts {
+	display: inline-block;
+	margin-top: 10%;
+	border: 0;
+}
