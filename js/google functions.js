@@ -28,7 +28,8 @@ function onSignIn(googleUser) {
                 success: function(data) {
                     //var obj = jQuery.parseJSON(data); if the dataType is not specified as json uncomment this
                     // do what ever you want with the server response
-                    console.log(data);
+                    saveUser("http://localhost:3030/users/"+data.id);
+                    dash_display();
                 },
                 error: function() {
                     alert('error handing here');
@@ -56,18 +57,18 @@ function onSignIn(googleUser) {
                             }
                         });
                     });
+                    saveUser("http://localhost:3030/users/"+id);
+                    dash_display();
                 }
                 else {
-                    console.log("nope");
+                    saveUser("http://localhost:3030/users/"+id);
+                    dash_display();
                 }
             });
         }
-        $("#img_display").attr("src",profile.getImageUrl());
-        $("#name_display").html(profile.getName());
-        $("#email_display").html(profile.getEmail());
 
         $(".card-wrapper").css("display","none");
-        $(".info-wrap").css("display","inline-block");
+        $(".info-wrap").css("display","block");
         $("#g_signout").css("display","block");
     });
 

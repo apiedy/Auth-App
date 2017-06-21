@@ -9,7 +9,7 @@ function statusChangeCallback(response) {
 	if (response.status === 'connected') {
 		// Logged into your app and Facebook.
 		$(".card-wrapper").css("display","none");
-		$(".info-wrap").css("display","inline-block");
+		$(".info-wrap").css("display","block");
 		$("#fb_logout").css("display","block");
 	    testAPI();
 	} 
@@ -86,7 +86,8 @@ function testAPI() {
 	                success: function(data) {
 	                    //var obj = jQuery.parseJSON(data); if the dataType is not specified as json uncomment this
 	                    // do what ever you want with the server response
-	                    console.log(data);
+	                    saveUser("http://localhost:3030/users/"+data.id);
+	                    dash_display();
 	                },
 	                error: function() {
 	                    alert('error handing here');
@@ -113,15 +114,15 @@ function testAPI() {
 	                            }
 	                        });
 	                    });
+	                    saveUser("http://localhost:3030/users/"+id);
+	                    dash_display();
 	    			}
 	    			else {
-	    				console.log("nope");
+	    				saveUser("http://localhost:3030/users/"+id);
+	    				dash_display();
 	    			}
 	    		});
 	    	}
-	    	$("#img_display").attr("src",response.picture.data.url);
-	    	$("#name_display").html(response.name);
-	    	$("#email_display").html(response.email);
 	    	console.log('Successful login for: ' + response.name);
 		    document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.first_name + '!';
     	});

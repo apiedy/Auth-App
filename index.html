@@ -23,25 +23,59 @@
 			</center>
 		</div>
 
-		<!-- info display card -->
-		<div class="panel panel-default info-wrap">
-			<div class="panel-heading">
-				User Info
-			</div>
-			<div class="panel-body">
-				<img id="img_display" src class="img-circle" width="100" height="100">
-				<div class="form-group">
-					<label>Name</label>
-					<p id="name_display"></p>
+		<!-- dashboard -->
+		<div class="container info-wrap">
+
+			<div class="row">
+				<div class="col-sm-12 wlc_card jumbotron">
+						<p id="wlc_msg"></p>
 				</div>
-				<div class="form-group">
-					<label>Email</label>
-					<p id="email_display"></p>
+			</div>
+			
+			<div class="row">
+				
+				<div class="col-sm-6 fb_card">
+					
+				</div>
+				
+				<div class="col-sm-6 google_card">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Google
+						</div>
+						<div class="panel-body">
+							<img id="" src class="img-circle" width="100" height="100">
+							<div class="form-group">
+								<label>First Name</label>
+								<p id=""></p>
+							</div>
+							<div class="form-group">
+								<label>Last Name</label>
+								<p id=""></p>
+							</div>
+							<div class="form-group">
+								<label>Email</label>
+								<p id=""></p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				
+				<div class="col-sm-6 twitter_card">
+					
+				</div>
+				
+				<div class="col-sm-6 linkedin_card">
+					
 				</div>
 			</div>
 		</div>
 
-		<a id="fb_logout" href="#" onclick="logout();">Log out(Facebook)</a>	
+		<a id="fb_logout" href="#" onclick="logout();">Log out(Facebook)</a>
 		<a id="g_signout" href="#" onclick="signOut();">Sign out(Google)</a>
 
 		<!-- google vendor script for api access -->
@@ -60,6 +94,7 @@
 		<!-- client side scripts -->
 		<script type="text/javascript" src="./js/checkDup.js"></script>
 		<script type="text/javascript" src="./js/checkSocial.js"></script>
+		<script type="text/javascript" src="./js/dash.js"></script>
 
 	</body>
 
