@@ -61,20 +61,70 @@ window.fbAsyncInit = function() {
 	js = d.createElement(s); js.id = id;
 	js.src = "//connect.facebook.net/en_US/sdk.js";
 	fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));	  
-	  
+}(document, 'script', 'facebook-jssdk'));  
+
 // Here we run a very simple test of the Graph API after login is
 // successful.  See statusChangeCallback() for when this call is made.
 function testAPI() {
-    console.log('Welcome!  Fetching your information.... ');
     FB.api('/me?fields=id,name,first_name,last_name,picture,email', function(response) {
-    	console.log(response);
-    	$.post("http://localhost:3030/fb",response);
-    	$("#img_display").attr("src",response.picture.data.url);
-    	$("#name_display").html(response.name);
-    	$("#email_display").html(response.email);
-    	console.log('Successful login for: ' + response.name);
-	    document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.first_name + '!';
+    	var fb_user = response;
+    	checkDup(response.email, function(existing_user,id){
+	    	if (!existing_user) {
+	    		var user = {
+	    			"name": response.name,
+	    			"email": response.email,
+	    			"social": {
+	    				"fb": response
+	    			}
+	    		};
+	    		user = JSON.stringify(user);
+	    		$.ajax({
+	                type: "POST",
+	                url: "http://localhost:3030/users",
+	                data: user,
+	                contentType: "application/json",
+	                success: function(data) {
+	                    //var obj = jQuery.parseJSON(data); if the dataType is not specified as json uncomment this
+	                    // do what ever you want with the server response
+	                    console.log(data);
+	                },
+	                error: function() {
+	                    alert('error handing here');
+	                }
+	            });
+	    	}
+	    	else {
+	    		checkSocial(id,"fb", function(existing_social) {
+	    			if(!existing_social) {
+	    				$.get("http://localhost:3030/users/"+id, function(response) {
+	                        var up_key = "fb";
+	                        var up_val = fb_user;
+	                        response.social[up_key] = up_val;	                    
+	                        $.ajax({
+	                            type: "PUT",
+	                            url: "http://localhost:3030/users/"+id,
+	                            contentType: "application/json",
+	                            data: JSON.stringify(response),
+	                            success: function(data) {
+	                                console.log(data);
+	                            },
+	                            error: function() {
+	                                alert('error handling PUT');
+	                            }
+	                        });
+	                    });
+	    			}
+	    			else {
+	    				console.log("nope");
+	    			}
+	    		});
+	    	}
+	    	$("#img_display").attr("src",response.picture.data.url);
+	    	$("#name_display").html(response.name);
+	    	$("#email_display").html(response.email);
+	    	console.log('Successful login for: ' + response.name);
+		    document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.first_name + '!';
+    	});
 	});
 }
 

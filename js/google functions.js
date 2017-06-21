@@ -1,23 +1,76 @@
 function onSignIn(googleUser) {
 
     var profile = googleUser.getBasicProfile();
-    var g_user = {
-        "id" : profile.getId(),
-        "name" : profile.getName(),
-        "first_name" : profile.getGivenName(),
-        "last_name" : profile.getFamilyName(),
-        "picture_url" : profile.getImageUrl(),
-        "email" : profile.getEmail()
-    }
-    $.post("http://localhost:3030/google",g_user);
 
-    $("#img_display").attr("src",profile.getImageUrl());
-    $("#name_display").html(profile.getName());
-    $("#email_display").html(profile.getEmail());
+    checkDup(profile.getEmail(), function(existing_user,id){
+        var g_user = {
+            "id" : profile.getId(),
+            "name" : profile.getName(),
+            "first_name" : profile.getGivenName(),
+            "last_name" : profile.getFamilyName(),
+            "picture_url" : profile.getImageUrl(),
+            "email" : profile.getEmail()
+        }
+        if (!existing_user) {
+            var user = {
+                "name": profile.getName(),
+                "email": profile.getEmail(),
+                "social": {
+                    "google": g_user
+                }
+            };
+            user = JSON.stringify(user);
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3030/users",
+                data: user,
+                contentType: "application/json",
+                success: function(data) {
+                    //var obj = jQuery.parseJSON(data); if the dataType is not specified as json uncomment this
+                    // do what ever you want with the server response
+                    console.log(data);
+                },
+                error: function() {
+                    alert('error handing here');
+                }
+            });
+        }
+        else {
+            checkSocial(id,"google", function(existing_social) {
+                if(!existing_social) {
+                    $.get("http://localhost:3030/users/"+id, function(response) {
+                        var up_key = "google";
+                        var up_val = g_user;
+                        response.social[up_key] = up_val;
+                        console.log(response);
+                        $.ajax({
+                            type: "PUT",
+                            url: "http://localhost:3030/users/"+id,
+                            contentType: "application/json",
+                            data: JSON.stringify(response),
+                            success: function(data) {
+                                console.log(data);
+                            },
+                            error: function() {
+                                alert('error handling PUT');
+                            }
+                        });
+                    });
+                }
+                else {
+                    console.log("nope");
+                }
+            });
+        }
+        $("#img_display").attr("src",profile.getImageUrl());
+        $("#name_display").html(profile.getName());
+        $("#email_display").html(profile.getEmail());
 
-    $(".card-wrapper").css("display","none");
-    $(".info-wrap").css("display","inline-block");
-    $("#g_signout").css("display","block");
+        $(".card-wrapper").css("display","none");
+        $(".info-wrap").css("display","inline-block");
+        $("#g_signout").css("display","block");
+    });
+
 }
 
 function signOut() {
